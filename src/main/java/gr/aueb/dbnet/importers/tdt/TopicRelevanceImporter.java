@@ -21,6 +21,8 @@ public class TopicRelevanceImporter {
 	
 	public  ConcurrentHashMap<String,String> topic_rel = new ConcurrentHashMap<String,String>();
 	public  HashSet<String> usedDocsIds = new HashSet<String>();
+	public  HashSet<String> usedFiles = new HashSet<String>();
+	public  HashSet<String> usedTopics = new HashSet<String>();
 	
 	public  void import_data() {
 		String data_path=System.getProperty("user.home")+SystemProperties.TOPICS_RELEVANCE_FILEPATH;
@@ -33,13 +35,17 @@ public class TopicRelevanceImporter {
 				Element el;
 				String atr1;
 				String atr2;
+				String atr3;
 				try {
 						rel_doc = Jsoup.parse(s);
 						if( rel_doc.body().getElementsByIndexEquals(0).size()==1){
 							el = rel_doc.body().getElementsByIndexEquals(0).first();
 							atr1 = el.attr("docno");
+							atr3 = el.attr("fileid");
+							usedFiles.add(atr3);
 							usedDocsIds.add(atr1);
 							atr2 = el.attr("topicid");
+							usedTopics.add(atr2);
 							topic_rel.put(atr1,atr2);
 						}
 				} catch (Exception e) {
@@ -52,7 +58,7 @@ public class TopicRelevanceImporter {
 
 		}
 		
-		logger.log(Level.INFO, String.format("Done Importing Topic Relevance Annotations"));
+		logger.log(Level.INFO, String.format("Done Importing Topic Relevance Annotations "+topic_rel.size()));
 	}
 
 }

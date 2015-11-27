@@ -14,15 +14,8 @@ public class TDTDocument extends Document implements Comparable<TDTDocument> {
 	List<String> keywords;
 	String headline;	
 	Boolean isFirstStory;
-	String label;
 	
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
+	
 
 	public TDTDocument(String docno, String text) {
 		super(docno, text);

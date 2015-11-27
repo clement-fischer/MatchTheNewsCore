@@ -5,10 +5,12 @@ import gr.aueb.dbnet.tdt.structures.TDTDocument;
 import gr.aueb.dbnet.util.MapUtil;
 import gr.aueb.dbnet.util.SystemProperties;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,11 +33,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public class DocumentImporter extends Importer {
+	final Logger logger = LoggerFactory.getLogger(DocumentImporter.class);
 
+   
 	private Map<String, TDTDocument> tdt_documents;
-	//private static ConcurrentHashMap<String,TDTDocument> documents_mttkn = new ConcurrentHashMap<String,TDTDocument>();
 	private ConcurrentHashMap<String, TDTDocument> train ;
 	private ConcurrentHashMap<String, TDTDocument> test;
 	
@@ -42,44 +47,48 @@ public class DocumentImporter extends Importer {
 	public  void importData(){
 		TreeMap<String,TDTDocument> documents_tkn = new TreeMap<String, TDTDocument>(sortByPreferenceKey);
 		String data_path = System.getProperty("user.home")+SystemProperties.DOCUMENT_FOLDER_IMPORT_TKN;
+		String suffix=".tkn_sgm";
 		TopicRelevanceImporter tpcRelImp = new TopicRelevanceImporter();
 		tpcRelImp.import_data();
 		ConcurrentHashMap<String, String> docs_topics=tpcRelImp.topic_rel;
-		try {
-			Files.walk(Paths.get(data_path)).forEach(filePath -> {
-				Boolean isEnglish= filePath.toString().endsWith("ENG.tkn_sgm") && (SystemProperties.READ_ONLY_ENGLISH_DOCUMENTS);
-				Boolean toRead=false;
-				if(SystemProperties.READ_ONLY_ENGLISH_DOCUMENTS && isEnglish){
-					toRead=true;
-				}
-				else if(SystemProperties.READ_ONLY_ENGLISH_DOCUMENTS && !isEnglish){
-					toRead=false;
-				}
+		tpcRelImp.usedFiles.forEach(f->{
+			Path filePath = Paths.get(data_path+f+suffix);
+				
+			Boolean isEnglish= filePath.toString().endsWith("ENG.tkn_sgm") && (SystemProperties.READ_ONLY_ENGLISH_DOCUMENTS);
+			Boolean toRead=false;
+			if(SystemProperties.READ_ONLY_ENGLISH_DOCUMENTS && isEnglish){
+				toRead=true;
+			}
+			else if(SystemProperties.READ_ONLY_ENGLISH_DOCUMENTS && !isEnglish){
+				toRead=false;
+			}
 
-				if ((Files.isRegularFile(filePath)) && toRead ) {
-					List<String>htmlDocList = null;
-					try {
-						htmlDocList = Files.readAllLines((filePath));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					String htmlDesc = StringUtils.join(htmlDocList, ' ');
-					Document docs = Jsoup.parse(htmlDesc);
-					Elements all_docs=docs.select("doc");
-					for(Element d:all_docs){
-						documents_tkn.put(d.select("docno").text(), new TDTDocument(d.select("docno").text(), d.select("text").text(),docs_topics.get(d.select("docno").text())));			
-					}
+			if ((Files.isRegularFile(filePath)) && toRead ) {
+				List<String>htmlDocList = null;
+				try {
+					htmlDocList = Files.readAllLines((filePath));
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
+				String htmlDesc = StringUtils.join(htmlDocList, ' ');
+				Document docs = Jsoup.parse(htmlDesc);
+				Elements all_docs=docs.select("doc");
+				for(Element d:all_docs){
+					if(!tpcRelImp.usedDocsIds.contains(d.select("docno").text()))
+						continue;
+					documents_tkn.put(d.select("docno").text(), new TDTDocument(d.select("docno").text(), d.select("text").text(),docs_topics.get(d.select("docno").text())));			
+				}
+			}
+		});
+		//TODO TEST
+		Set<Entry<String, TDTDocument>> set = documents_tkn.entrySet();
+		for(Entry<String, TDTDocument> e:set){
+			if(tpcRelImp.usedTopics.contains(e.getValue().getLabel())){
+				tpcRelImp.usedTopics.remove(e.getValue().getLabel());
+				e.getValue().setIsFirstStory(true);		
+			}
 		}
-		Entry<String, TDTDocument> novelStory = documents_tkn.firstEntry();
-		novelStory.getValue().setIsFirstStory(true);
 		
-		while((novelStory=documents_tkn.ceilingEntry(novelStory.getKey()))!=null){
-			novelStory.getValue().setIsFirstStory(true);			
-		}
 		tdt_documents=documents_tkn;
 	}
 
