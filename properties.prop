@@ -1,4 +1,4 @@
-rTOPICS_BY_LANGUAGE_FILEPATH=/Datasets/TDT/tdt5_topic_annot/docs/TDT2004.topics_by_language
+TOPICS_BY_LANGUAGE_FILEPATH=/Datasets/TDT/tdt5_topic_annot/docs/TDT2004.topics_by_language
 TOPICS_DESCRIPTION_FILEPATH=/Datasets/TDT/data/tdt5_topic_annot/docs/TDT2004-topic_profiles.html
 LINK_DETECTION_RESULT_FOLDER=/TDT/Results/LinkDetection/
 TOPICS_RELEVANCE_FILEPATH=/Datasets/TDT/tdt5_topic_annot/data/annotations/topic_relevance/TDT2004.topic_rel.v2.0
