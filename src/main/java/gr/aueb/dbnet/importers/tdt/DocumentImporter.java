@@ -105,11 +105,14 @@ public class DocumentImporter extends Importer {
 
 	@Override
 	public Map<String, ? extends gr.aueb.dbnet.tdt.structures.Document> getData() {
-		// TODO Auto-generated method stub
 		return tdt_documents;
 	}
 	
-	Comparator<String> sortByPreferenceKey = new Comparator<String>(){
+	// Compare keys
+	// Return +1 if this key is more recent than the key given in the argument
+	// Return -1 if this key is older than the key given in the argument
+	// Return 0 otherwise
+	public static Comparator<String> sortByPreferenceKey = new Comparator<String>(){
 	    public int compare(String o1, String o2) {
 	    	String comparator1=o1.substring(3);
 			String comparator2=o2.substring(3);

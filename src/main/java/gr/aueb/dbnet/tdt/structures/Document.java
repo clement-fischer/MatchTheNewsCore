@@ -60,7 +60,7 @@ public class Document {
 		return DocParser.parse2Array(text);
 	}
 	
-	
+	// Bag of words
 	private Map<String, Integer> analyzeText(String text) {
 		Map<String, Integer> res = new HashMap<String, Integer>();
 		String[] doc = DocParser.parse2Array(text);

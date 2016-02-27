@@ -26,6 +26,7 @@ public class TopicRelevanceImporter {
 	
 	public  void import_data() {
 		String data_path=System.getProperty("user.home")+SystemProperties.TOPICS_RELEVANCE_FILEPATH;
+
 		Stream<String> lines;
 		try {
 			lines = Files.lines(Paths.get(data_path));

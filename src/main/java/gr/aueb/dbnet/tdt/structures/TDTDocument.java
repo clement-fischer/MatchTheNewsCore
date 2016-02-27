@@ -14,6 +14,7 @@ public class TDTDocument extends Document implements Comparable<TDTDocument> {
 	List<String> keywords;
 	String headline;	
 	Boolean isFirstStory;
+	double noveltyScore;
 	
 	
 
@@ -56,6 +57,18 @@ public class TDTDocument extends Document implements Comparable<TDTDocument> {
 		this.isFirstStory = isFirstStory;
 	}
 	
+	public double getNoveltyScore(){
+		return noveltyScore;
+	}
+	
+	public void setNoveltyScore(double score){
+		this.noveltyScore = score;
+	}
+	
+	// Compare TDTDocuments
+	// Return +1 if this document is more recent than the TDTDocument given in the argument
+	// Return -1 if this document is older than the TDTDocument given in the argument
+	// Return 0 otherwise
 	@Override
 	public int compareTo(TDTDocument o) {
 		TDTDocument doc2=(TDTDocument) o;
