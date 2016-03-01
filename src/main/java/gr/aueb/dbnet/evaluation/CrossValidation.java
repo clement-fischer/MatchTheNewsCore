@@ -9,6 +9,7 @@ import gr.aueb.dbnet.tdt.structures.TDTDocument;
 
 public class CrossValidation {
 	private int nbFolds = 5;
+	private int nbThresholds = 100;
 	private List<String> keysForCrossValidation;
 	private Map<String, TDTDocument> tdt_documents;
 
@@ -27,6 +28,7 @@ public class CrossValidation {
 		// TODO Get costs and thresholds out !!
 		double[] costs = new double[nbFolds], thresholds = new double[nbFolds];
 		for (int i = 0; i < nbFolds; i++) {
+			System.out.println("Fold " + (i + 1) + "/" + nbFolds);
 			trainingKeys.clear();
 			for (int j = 0; j < nbFolds; j++) {
 				if (i != j)
@@ -35,27 +37,29 @@ public class CrossValidation {
 					testingKeys = folds.get(j);
 			}
 			thresholds[i] = train(trainingKeys);
-			costs[i] = test(testingKeys,thresholds[i]);
+			costs[i] = test(testingKeys, thresholds[i]);
+			System.out.println("Cost for fold #" + (i + 1) + ": " + costs[i]);
 		}
-		
-		double avgCost= 0;
+
+		double avgCost = 0;
 		for (int i = 0; i < nbFolds; i++)
-			avgCost+=costs[i];
-		return avgCost/nbFolds;
+			avgCost += costs[i];
+		return avgCost / nbFolds;
 	}
 
 	private ArrayList<ArrayList<String>> getFolds() {
 		int[] posFolds = new int[nbFolds + 1];
 		posFolds[0] = 0;
 		int q = keysForCrossValidation.size() / nbFolds, r = keysForCrossValidation.size() % nbFolds;
-		for (int i = 1; i < nbFolds; i++)
+		for (int i = 1; i < nbFolds + 1; i++)
 			if (i < r)
 				posFolds[i] = posFolds[i - 1] + q + 1;
 			else
 				posFolds[i] = posFolds[i - 1] + q;
+
 		ArrayList<ArrayList<String>> folds = new ArrayList<ArrayList<String>>(nbFolds);
 		for (int i = 0; i < nbFolds; i++) {
-			folds.set(i, new ArrayList<String>(q + 1));
+			folds.add(new ArrayList<String>(q + 1));
 			folds.get(i).addAll(keysForCrossValidation.subList(posFolds[i], posFolds[i + 1]));
 		}
 		return folds;
@@ -67,8 +71,8 @@ public class CrossValidation {
 		double cost, minCost = 1;
 		double bestThreshold = 0;
 
-		for (int i = 0; i < 1000; i++) {
-			threshold = i / 1000.;
+		for (int i = 0; i < nbThresholds; i++) {
+			threshold = i / (double) nbThresholds;
 			cm.setThreshold(threshold);
 			for (String key : trainingKeys) {
 				cm.test(tdt_documents.get(key));

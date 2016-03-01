@@ -2,8 +2,8 @@ package gr.aueb.dbnet.main;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
+import java.util.TreeSet;
 
 import gr.aueb.dbnet.evaluation.CrossValidation;
 import gr.aueb.dbnet.evaluation.EvaluationParameters;
@@ -35,7 +35,25 @@ public class Main {
 		keys.addAll(documentImporter.getData().keySet());
 		// The following line seems to be unnecessary
 		// Collections.sort(keys, DocumentImporter.sortByPreferenceKey);
-
+		
+		// Set isFirstStory
+		TreeSet<String> readTopics = new TreeSet<String>();
+		TDTDocument currentDoc;
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			if(readTopics.contains(currentDoc.getLabel())){
+				currentDoc.setIsFirstStory(false);
+			}
+			else{
+				currentDoc.setIsFirstStory(true);
+				readTopics.add(currentDoc.getLabel());
+			}
+			
+		}
+		// TODO Ask why this is not 250 as it is said in the dataset documentation
+		System.out.println("Number of topics in the dataset: " + readTopics.size());
+		
+		
 		// List of 5 parameters. Each set of parameters starts the a test.
 		EvaluationParameters ep = new EvaluationParameters(60);
 		
@@ -45,8 +63,6 @@ public class Main {
 		
 		double maxScore = 0,minScore = 1000000;
 		
-		TDTDocument currentDoc;
-		int i=0;
 		for (String key : keys){
 			currentDoc = (TDTDocument) documentImporter.getData().get(key);
 			try {

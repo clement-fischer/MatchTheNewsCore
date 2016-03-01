@@ -24,9 +24,9 @@ public class Document {
 		this.docno = docno;
 		this.text = text;
 		tokens = tokenize(text);
-		//sentences = splitSentences(text);
+		sentences = splitSentences(text);
 		analyzedText = analyzeText(text);
-		//analyzedSentences = analyzeSentences(sentences);
+		analyzedSentences = analyzeSentences(sentences);
 	}
 	
 	public Document(String docno, String text, String label) {
