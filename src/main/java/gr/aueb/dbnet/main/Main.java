@@ -45,12 +45,12 @@ public class Main {
 		double maxScore = 0,minScore = 1000000;
 		
 		TDTDocument currentDoc;
+		int i=0;
 		for (String key : keys){
 			currentDoc = (TDTDocument) documentImporter.getData().get(key);
 			ns.nextDocument(currentDoc);
 			maxScore = Math.max(maxScore, currentDoc.getNoveltyScore());
 			minScore = Math.min(minScore, currentDoc.getNoveltyScore());
-			//System.out.println(currentDoc.getNoveltyScore());
 		}
 		
 		System.out.println(maxScore);

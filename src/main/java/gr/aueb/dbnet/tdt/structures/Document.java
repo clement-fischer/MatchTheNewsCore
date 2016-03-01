@@ -25,7 +25,7 @@ public class Document {
 		this.text = text;
 		tokens = tokenize(text);
 		//sentences = splitSentences(text);
-		//analyzedText = analyzeText(text);
+		analyzedText = analyzeText(text);
 		//analyzedSentences = analyzeSentences(sentences);
 	}
 	
