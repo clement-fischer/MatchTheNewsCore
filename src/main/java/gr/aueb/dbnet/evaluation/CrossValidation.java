@@ -48,14 +48,15 @@ public class CrossValidation {
 		int[] posFolds = new int[nbFolds + 1];
 		posFolds[0] = 0;
 		int q = keysForCrossValidation.size() / nbFolds, r = keysForCrossValidation.size() % nbFolds;
-		for (int i = 1; i < nbFolds; i++)
+		for (int i = 1; i < nbFolds + 1; i++)
 			if (i < r)
 				posFolds[i] = posFolds[i - 1] + q + 1;
 			else
 				posFolds[i] = posFolds[i - 1] + q;
+		
 		ArrayList<ArrayList<String>> folds = new ArrayList<ArrayList<String>>(nbFolds);
 		for (int i = 0; i < nbFolds; i++) {
-			folds.set(i, new ArrayList<String>(q + 1));
+			folds.add(new ArrayList<String>(q + 1));
 			folds.get(i).addAll(keysForCrossValidation.subList(posFolds[i], posFolds[i + 1]));
 		}
 		return folds;
