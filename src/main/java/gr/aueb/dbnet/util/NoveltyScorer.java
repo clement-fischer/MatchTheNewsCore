@@ -1,8 +1,13 @@
 package gr.aueb.dbnet.util;
 
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import gr.aueb.dbnet.evaluation.EvaluationParameters;
@@ -25,8 +30,13 @@ public class NoveltyScorer {
 	
 	// Stream of documents come through this function
 	// Updates the field noveltyScore of doc and tDF
-	public void nextDocument(TDTDocument doc) {
-		doc.setDate_time(Calendar.getInstance());
+	public void nextDocument(TDTDocument doc) throws ParseException {
+		String comparator1=doc.getDocno().substring(3);
+		DateFormat format = new SimpleDateFormat("yyyyMd", Locale.ENGLISH);
+		Date date = format.parse(comparator1);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		doc.setDate_time(cal);
 		updatetDF(doc);
 		if (slidingWindow.size() < windowSize) {
 			slidingWindow.add(doc);
@@ -85,7 +95,7 @@ public class NoveltyScorer {
 	}
 	
 	public double decayFunction(Calendar c1, Calendar c2) {
-		double x = c1.getTime().getTime() - c2.getTime().getTime();
+		double x = (c1.getTime().getTime() - c2.getTime().getTime())/1000/3600/24/10; // échelle de temps = 1 mois
 		// sigmoid function
 		return (1/( 1 + Math.pow(Math.E,(-1*x))));
 	}

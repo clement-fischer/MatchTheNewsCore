@@ -1,5 +1,6 @@
 package gr.aueb.dbnet.main;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -48,9 +49,14 @@ public class Main {
 		int i=0;
 		for (String key : keys){
 			currentDoc = (TDTDocument) documentImporter.getData().get(key);
-			ns.nextDocument(currentDoc);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			maxScore = Math.max(maxScore, currentDoc.getNoveltyScore());
 			minScore = Math.min(minScore, currentDoc.getNoveltyScore());
+			System.out.println(currentDoc.getNoveltyScore());
 		}
 		
 		System.out.println(maxScore);
