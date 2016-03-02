@@ -21,6 +21,7 @@ public class NoveltyScorer {
 	Map<String, DatedScore> tDF;
 	EvaluationParameters ep;
 	double avdl;
+	int numDocs;
 	
 	// Constructor
 	public	NoveltyScorer(EvaluationParameters ep) {
@@ -29,18 +30,14 @@ public class NoveltyScorer {
 		this.ep = ep;
 		tDF = new HashMap<String, DatedScore>();
 		avdl = 0;
+		numDocs = 0;
 	}
 	
 	// Stream of documents come through this function
 	// Updates the field noveltyScore of doc and tDF
 	public void nextDocument(TDTDocument doc) throws ParseException {
 		avdl = (avdl * slidingWindow.size() + doc.getTokens().length) / (slidingWindow.size() + 1);
-		String comparator1=doc.getDocno().substring(3);
-		DateFormat format = new SimpleDateFormat("yyyyMd", Locale.ENGLISH);
-		Date date = format.parse(comparator1);
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		doc.setDate_time(cal);
+		numDocs++;
 		updatetDF(doc);
 		if (slidingWindow.size() < windowSize) {
 			slidingWindow.add(doc);
@@ -51,8 +48,6 @@ public class NoveltyScorer {
 			TDTDocument oldest = slidingWindow.removeFirst();
 			avdl = (avdl * (slidingWindow.size()+1) - oldest.getTokens().length) / slidingWindow.size();
 		}
-		//Random r = new Random(); 
-	    //doc.setNoveltyScore(r.nextDouble());
 	}
 	
 	public void updatetDF(TDTDocument doc) {
@@ -64,13 +59,13 @@ public class NoveltyScorer {
 			// slidingWindow.peekFirst().getDate_time() = oldest document in window
 			// tDF.get(term).date_time = oldest reference to current term
 			// if term doesn't exist or is too old, replace by 1
-			if (!(tDF.get(term) != null && slidingWindow.peekFirst().getDate_time().compareTo(tDF.get(term).date_time) > 0)){
-				tDF.put(term, new DatedScore(1,doc.getDate_time()));
+			if (!(tDF.get(term) != null)){
+				tDF.put(term, new DatedScore(1,numDocs));
 			}
 			// else update thanks to formula (12)
 			else {
-				double newScore = tDF.get(term).score*decayFunction(tDF.get(term).date_time,doc.getDate_time()) + 1;
-				tDF.put(term, new DatedScore(newScore,doc.getDate_time()));
+				double newScore = tDF.get(term).score*decayFunction(tDF.get(term).date_in,numDocs) + 1;
+				tDF.put(term, new DatedScore(newScore,numDocs));
 			}
 		}
 	}
@@ -136,9 +131,8 @@ public class NoveltyScorer {
 		return 1;
 	}
 	
-	public double decayFunction(Calendar c1, Calendar c2) {
-		double x = (c1.getTime().getTime() - c2.getTime().getTime())/1000/3600/24/10; // échelle de temps = 1 mois
+	public double decayFunction(int i1, int i2) {
 		// sigmoid function
-		return (1/( 1 + Math.pow(Math.E,(-1*x))));
+		return (1/( 1 + Math.pow(Math.E,(Math.abs(i1-i2)-windowSize/2)/40)));
 	}
 }

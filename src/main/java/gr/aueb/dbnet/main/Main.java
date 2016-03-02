@@ -55,13 +55,11 @@ public class Main {
 		
 		
 		// List of 5 parameters. Each set of parameters starts the a test.
-		EvaluationParameters ep = new EvaluationParameters(60,"n","s","d",0.75,1);
+		EvaluationParameters ep = new EvaluationParameters(60,"b","s","d",0,1);
 		
 		// Add one by one the documents to be processed, give a NS to each document
 		
 		NoveltyScorer ns = new NoveltyScorer(ep);
-		
-		double maxScore = 0,minScore = 1000000;
 		
 		for (String key : keys){
 			currentDoc = (TDTDocument) documentImporter.getData().get(key);
@@ -70,18 +68,181 @@ public class Main {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			maxScore = Math.max(maxScore, currentDoc.getNoveltyScore());
-			minScore = Math.min(minScore, currentDoc.getNoveltyScore());
-//			System.out.println(currentDoc.getNoveltyScore());
+			//System.out.println(currentDoc.getNoveltyScore());
 		}
-		
-		System.out.println(maxScore);
-		System.out.println(minScore);
-		
+				
 		// Cross validation to find the threshold
 		// TODO Dangerous cast ?
 		CrossValidation cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
 		double avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"n","s","d",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"b","b","u",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"k","s","u",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"l","b","n",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"k","b","n",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"k","s","d",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
+		System.out.println("Parameters:");
+		System.out.println(ep.toString());
+		System.out.println("Average cost: " + avgCost);
+		
+		ep = new EvaluationParameters(60,"k","b","d",0,1);
+		
+		// Add one by one the documents to be processed, give a NS to each document
+		
+		ns = new NoveltyScorer(ep);
+		
+		for (String key : keys){
+			currentDoc = (TDTDocument) documentImporter.getData().get(key);
+			try {
+				ns.nextDocument(currentDoc);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//System.out.println(currentDoc.getNoveltyScore());
+		}
+				
+		// Cross validation to find the threshold
+		// TODO Dangerous cast ?
+		cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+		avgCost = cv.compute();
 		System.out.println("Parameters:");
 		System.out.println(ep.toString());
 		System.out.println("Average cost: " + avgCost);

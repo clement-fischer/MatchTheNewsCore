@@ -29,8 +29,8 @@ public class CrossValidation {
 			maxScore = Math.max(maxScore, doc.getNoveltyScore());
 			minScore = Math.min(minScore, doc.getNoveltyScore());
 		}
-//		System.out.println("Max score at Cross Validation before normalization: " + maxScore);
-//		System.out.println("Min score at Cross Validation before normalization: " + minScore);
+		//System.out.println("Max score at Cross Validation before normalization: " + maxScore);
+		//System.out.println("Min score at Cross Validation before normalization: " + minScore);
 
 		for (String key : keysForCrossValidation) {
 			doc = tdt_documents.get(key);
@@ -54,7 +54,7 @@ public class CrossValidation {
 		// TODO Get costs and thresholds out !!
 		double[] costs = new double[nbFolds], thresholds = new double[nbFolds];
 		for (int i = 0; i < nbFolds; i++) {
-			System.out.println("Fold " + (i + 1) + "/" + nbFolds);
+			//System.out.println("Fold " + (i + 1) + "/" + nbFolds);
 			trainingKeys.clear();
 			for (int j = 0; j < nbFolds; j++) {
 				if (i != j)
@@ -64,7 +64,7 @@ public class CrossValidation {
 			}
 			thresholds[i] = train(trainingKeys);
 			costs[i] = test(testingKeys, thresholds[i]);
-			System.out.println("Cost for fold #" + (i + 1) + ": " + costs[i]);
+			//System.out.println("Cost for fold #" + (i + 1) + ": " + costs[i]);
 		}
 
 		double avgCost = 0;

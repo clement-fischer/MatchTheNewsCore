@@ -1,13 +1,11 @@
 package gr.aueb.dbnet.util;
 
-import java.util.Calendar;
-
 public class DatedScore {         
     public double score;
-    public Calendar date_time;
+    public int date_in;
 
-    public DatedScore(double s, Calendar d) {         
+    public DatedScore(double s, int d) {         
         this.score= s;
-        this.date_time= d;
+        this.date_in= d;
      }
  }
