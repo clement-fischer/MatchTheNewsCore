@@ -8,47 +8,53 @@ public class ConfusionMatrix {
 	private int fp;
 	private int fn;
 	private double threshold;
-	
-	public ConfusionMatrix(){
-	}
-	
-	public double singleDetectionCost(){
-		return (cMiss()*pMiss()*pTarget())+(cFa()*pFa()*(1-pTarget()));
+
+	public ConfusionMatrix() {
 	}
 
-	public double cMiss(){
+	public double singleDetectionCost() {
+		return (cMiss() * pMiss() * pTarget()) + (cFa() * pFa() * (1 - pTarget()));
+	}
+
+	public double cMiss() {
 		return 1.;
 	}
-	public double pMiss(){
-		return ((double)fn)/(fn+tp);
+
+	public double pMiss() {
+		return ((double) fn) / (fn + tp);
 	}
-	public double pTarget(){
+
+	public double pTarget() {
 		return 0.5;
 	}
-	public double cFa(){
+
+	public double cFa() {
 		return 1.;
 	}
-	public double pFa(){
-		return ((double)fn)/(fp+tn);
+
+	public double pFa() {
+		return ((double) fp) / (fp + tn);
 	}
-	
-	public void setThreshold(double threshold){
-		tp=0;
-		tn=0;
-		fp=0;
-		fn=0;
-		this.threshold=threshold;
+
+	public void setThreshold(double threshold) {
+		tp = 0;
+		tn = 0;
+		fp = 0;
+		fn = 0;
+		this.threshold = threshold;
 	}
-	
-	public void test(TDTDocument document){
+
+	public void test(TDTDocument document) {
 		if (document.getIsFirstStory())
 			if (document.getNoveltyScore() < threshold)
 				fn++;
 			else
 				tp++;
-		else if (document.getNoveltyScore() < threshold)
-			tn++;
-		else
-			fp++;
+		else {
+			if (document.getNoveltyScore() < threshold)
+				tn++;
+			else
+				fp++;
+		}
 	}
 }

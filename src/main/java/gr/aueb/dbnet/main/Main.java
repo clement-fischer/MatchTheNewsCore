@@ -72,7 +72,7 @@ public class Main {
 			}
 			maxScore = Math.max(maxScore, currentDoc.getNoveltyScore());
 			minScore = Math.min(minScore, currentDoc.getNoveltyScore());
-			System.out.println(currentDoc.getNoveltyScore());
+//			System.out.println(currentDoc.getNoveltyScore());
 		}
 		
 		System.out.println(maxScore);

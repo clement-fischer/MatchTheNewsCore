@@ -21,6 +21,32 @@ public class CrossValidation {
 	public double compute() {
 		Collections.shuffle(keysForCrossValidation);
 		ArrayList<ArrayList<String>> folds = getFolds();
+		double maxScore = 0, minScore = 1000000;
+		TDTDocument doc;
+
+		for (String key : keysForCrossValidation) {
+			doc = tdt_documents.get(key);
+			maxScore = Math.max(maxScore, doc.getNoveltyScore());
+			minScore = Math.min(minScore, doc.getNoveltyScore());
+		}
+//		System.out.println("Max score at Cross Validation before normalization: " + maxScore);
+//		System.out.println("Min score at Cross Validation before normalization: " + minScore);
+
+		for (String key : keysForCrossValidation) {
+			doc = tdt_documents.get(key);
+			doc.setNoveltyScore((doc.getNoveltyScore() - minScore) / (maxScore - minScore));
+		}
+
+//		maxScore = 0;
+//		minScore = 1000000;
+//		for (String key : keysForCrossValidation) {
+//			doc = tdt_documents.get(key);
+//			System.out.println(doc.getNoveltyScore());
+//			maxScore = Math.max(maxScore, doc.getNoveltyScore());
+//			minScore = Math.min(minScore, doc.getNoveltyScore());
+//		}
+//		System.out.println("Max score at Cross Validation after normalization: " + maxScore);
+//		System.out.println("Min score at Cross Validation after normalization: " + minScore);
 
 		ArrayList<String> trainingKeys = new ArrayList<String>(keysForCrossValidation.size());
 		ArrayList<String> testingKeys = null;
