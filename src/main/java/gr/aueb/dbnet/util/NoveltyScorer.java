@@ -3,6 +3,7 @@ package gr.aueb.dbnet.util;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ public class NoveltyScorer {
 	int windowSize;
 	Map<String, DatedScore> tDF;
 	EvaluationParameters ep;
+	double avdl;
 	
 	// Constructor
 	public	NoveltyScorer(EvaluationParameters ep) {
@@ -26,11 +28,13 @@ public class NoveltyScorer {
 		this.windowSize = ep.getN();
 		this.ep = ep;
 		tDF = new HashMap<String, DatedScore>();
+		avdl = 0;
 	}
 	
 	// Stream of documents come through this function
 	// Updates the field noveltyScore of doc and tDF
 	public void nextDocument(TDTDocument doc) throws ParseException {
+		avdl = (avdl * slidingWindow.size() + doc.getTokens().length) / (slidingWindow.size() + 1);
 		String comparator1=doc.getDocno().substring(3);
 		DateFormat format = new SimpleDateFormat("yyyyMd", Locale.ENGLISH);
 		Date date = format.parse(comparator1);
@@ -44,8 +48,11 @@ public class NoveltyScorer {
 		else {
 			computeNoveltyScore(doc);
 			slidingWindow.add(doc);
-			slidingWindow.removeFirst();
+			TDTDocument oldest = slidingWindow.removeFirst();
+			avdl = (avdl * (slidingWindow.size()+1) - oldest.getTokens().length) / slidingWindow.size();
 		}
+		//Random r = new Random(); 
+	    //doc.setNoveltyScore(r.nextDouble());
 	}
 	
 	public void updatetDF(TDTDocument doc) {
@@ -74,23 +81,58 @@ public class NoveltyScorer {
 		if (terms == null)
 			return;
 		for (String term : terms.keySet()) {
-			ns += tf(term,doc,ep)*idf(tDF.get(term).score,ep);
+			ns += tf(term,doc)*idf(tDF.get(term).score);
 		}
-		ns /= norm(doc,ep);
+		ns /= norm(doc);
 		doc.setNoveltyScore(ns);
 	}
 	
-	public double tf(String term, TDTDocument doc, EvaluationParameters ep) {
+	public double tf(String term, TDTDocument doc) {
 		double docLength = doc.getTokens().length;
 		double tf = doc.getAnalyzedText().get(term) / docLength;
-		return tf;
+		if (ep.getTF() == "b")
+			return doc.getAnalyzedText().get(term) != null ? 1 : 0;
+		else if (ep.getTF() == "n")
+			return tf;
+		else if (ep.getTF() == "l")
+			return 1 + Math.log(tf);
+		else if (ep.getTF() == "k")
+			return (ep.getK() + 1)*tf/(ep.getK()*(1 - ep.getB() + ep.getB()*docLength/avdl) + tf);
+		return 0;
 	}
 	
-	public double idf(double df, EvaluationParameters ep) {
-		return Math.log(windowSize/df);
+	public double idf(double df) {
+		if (ep.getIDF() == "t")
+			return Math.log(windowSize/df);
+		else if (ep.getIDF() == "s")
+			return Math.log((windowSize+1)/(df+0.5));
+		else if (ep.getIDF() == "p")
+			return Math.log((windowSize-df)/df);
+		else if (ep.getIDF() == "b")
+			return Math.log((windowSize-df+0.5)/(df+0.5));
+		return 0;
 	}
 	
-	public double norm(TDTDocument doc, EvaluationParameters ep) {
+	public double norm(TDTDocument doc) {
+		double docLength = doc.getTokens().length;
+		if (ep.getNORM() == "n")
+			return 1;
+		else if (ep.getNORM() == "u")
+			return doc.getAnalyzedText().size();
+		else if (ep.getNORM() == "d") {
+			double norm = 0;
+			for (String term : doc.getAnalyzedText().keySet())
+				norm += doc.getAnalyzedText().get(term) / docLength;
+			return norm;
+		}
+		else if (ep.getNORM() == "c") {
+			double snorm = 0;
+			for (String term : doc.getAnalyzedText().keySet())
+				snorm += Math.pow(doc.getAnalyzedText().get(term) / docLength,2);
+			return Math.sqrt(snorm);
+		}
+		else if (ep.getNORM() == "p")
+			return 1 - ep.getB() + ep.getB()*docLength/avdl;
 		return 1;
 	}
 	

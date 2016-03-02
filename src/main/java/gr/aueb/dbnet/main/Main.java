@@ -55,7 +55,7 @@ public class Main {
 		
 		
 		// List of 5 parameters. Each set of parameters starts the a test.
-		EvaluationParameters ep = new EvaluationParameters(60);
+		EvaluationParameters ep = new EvaluationParameters(60,"n","s","d",0.75,1);
 		
 		// Add one by one the documents to be processed, give a NS to each document
 		
