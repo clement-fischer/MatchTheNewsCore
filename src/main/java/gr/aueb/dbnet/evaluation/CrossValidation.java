@@ -9,7 +9,7 @@ import gr.aueb.dbnet.tdt.structures.TDTDocument;
 
 public class CrossValidation {
 	private int nbFolds = 5;
-	private int nbThresholds = 100;
+	private int nbThresholds = 10;
 	private List<String> keysForCrossValidation;
 	private Map<String, TDTDocument> tdt_documents;
 
@@ -29,24 +29,11 @@ public class CrossValidation {
 			maxScore = Math.max(maxScore, doc.getNoveltyScore());
 			minScore = Math.min(minScore, doc.getNoveltyScore());
 		}
-		//System.out.println("Max score at Cross Validation before normalization: " + maxScore);
-		//System.out.println("Min score at Cross Validation before normalization: " + minScore);
 
 		for (String key : keysForCrossValidation) {
 			doc = tdt_documents.get(key);
 			doc.setNoveltyScore((doc.getNoveltyScore() - minScore) / (maxScore - minScore));
 		}
-
-//		maxScore = 0;
-//		minScore = 1000000;
-//		for (String key : keysForCrossValidation) {
-//			doc = tdt_documents.get(key);
-//			System.out.println(doc.getNoveltyScore());
-//			maxScore = Math.max(maxScore, doc.getNoveltyScore());
-//			minScore = Math.min(minScore, doc.getNoveltyScore());
-//		}
-//		System.out.println("Max score at Cross Validation after normalization: " + maxScore);
-//		System.out.println("Min score at Cross Validation after normalization: " + minScore);
 
 		ArrayList<String> trainingKeys = new ArrayList<String>(keysForCrossValidation.size());
 		ArrayList<String> testingKeys = null;
@@ -54,7 +41,7 @@ public class CrossValidation {
 		// TODO Get costs and thresholds out !!
 		double[] costs = new double[nbFolds], thresholds = new double[nbFolds];
 		for (int i = 0; i < nbFolds; i++) {
-			//System.out.println("Fold " + (i + 1) + "/" + nbFolds);
+			long startTime = System.nanoTime();
 			trainingKeys.clear();
 			for (int j = 0; j < nbFolds; j++) {
 				if (i != j)
@@ -64,7 +51,10 @@ public class CrossValidation {
 			}
 			thresholds[i] = train(trainingKeys);
 			costs[i] = test(testingKeys, thresholds[i]);
-			//System.out.println("Cost for fold #" + (i + 1) + ": " + costs[i]);
+			long endTime = System.nanoTime();
+			double duration = (double)(endTime - startTime)/1000000000;
+			//System.out.println("Fold " + (i + 1) + "/" + nbFolds + " : " + duration + " secs");
+			//System.out.println("Done.");
 		}
 
 		double avgCost = 0;

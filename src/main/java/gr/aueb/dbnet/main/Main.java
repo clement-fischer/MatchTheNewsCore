@@ -1,5 +1,9 @@
 package gr.aueb.dbnet.main;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,19 +59,74 @@ public class Main {
 
 		LinkedList<EvaluationParameters> listTests = new LinkedList<EvaluationParameters>();
 		// Each set of parameters starts the a test.
-		listTests.add(new EvaluationParameters(60, "b", "s", "d", 0, 1));
-		listTests.add(new EvaluationParameters(60, "n", "s", "d", 0, 1));
-		listTests.add(new EvaluationParameters(60, "k", "b", "d", 0, 1));
-		listTests.add(new EvaluationParameters(60, "b", "b", "u", 0, 1));
-		listTests.add(new EvaluationParameters(60, "k", "s", "u", 0, 1));
-		listTests.add(new EvaluationParameters(60, "l", "b", "n", 0, 1));
-		listTests.add(new EvaluationParameters(60, "k", "s", "n", 0, 1));
-		listTests.add(new EvaluationParameters(60, "k", "b", "n", 0, 1));
+		listTests.add(new EvaluationParameters("b", "s", "d"));
+		listTests.add(new EvaluationParameters("b", "b", "d"));
+		listTests.add(new EvaluationParameters("n", "s", "d"));
+		listTests.add(new EvaluationParameters("n", "b", "d"));
+		listTests.add(new EvaluationParameters("l", "s", "d"));
+		listTests.add(new EvaluationParameters("l", "b", "d"));
+		listTests.add(new EvaluationParameters("k", "s", "d",0,1));
+		listTests.add(new EvaluationParameters("k", "b", "d",0,1));
 
 		// Add one by one the documents to be processed, give a NS to each document
 		NoveltyScorer ns;
 		CrossValidation cv;
+		
+		// create CSV file
+		try {
+			new PrintWriter("resultsChart.csv", "UTF-8");
+		} catch (Exception e){}
+		
+		// fill CSV file
+		try {
+			FileWriter filewriter = new FileWriter("resultsChart.csv", true);
+			filewriter.append("model;20;60;100;140;180\n");
+			filewriter.close();
+		} catch (Exception e){}
+		
 		for(EvaluationParameters ep : listTests) {
+			
+			// print model in CSV file
+			try {
+				FileWriter filewriter = new FileWriter("resultsChart.csv", true);
+				filewriter.append("\n"+ep.toString());
+				filewriter.close();
+			} catch (Exception e){}
+						
+			for (int i = 0;i<5;i++) {
+				ep.setN(40*i + 20);
+				ns = new NoveltyScorer(ep);
+				for (String key : keys) {
+					currentDoc = (TDTDocument) documentImporter.getData().get(key);
+					try {
+						ns.nextDocument(currentDoc);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+	
+				// Cross validation to find the threshold
+				cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
+				double avgCost = cv.compute();
+				
+				// print cost in CSV file
+				try {
+					FileWriter filewriter = new FileWriter("resultsChart.csv", true);
+					filewriter.append(";"+Double.toString(avgCost));
+					filewriter.close();
+				} catch (Exception e){}
+			}
+			System.out.println("Done one model");
+		}
+		
+		try {
+			FileWriter filewriter = new FileWriter("resultsChart.csv", true);
+			filewriter.append("\n"+ep.toString());
+			filewriter.close();
+		} catch (Exception e){}
+					
+		for (int i = 0;i<5;i++) {
+			ep.setN(40*i + 20);
 			ns = new NoveltyScorer(ep);
 			for (String key : keys) {
 				currentDoc = (TDTDocument) documentImporter.getData().get(key);
@@ -81,12 +140,14 @@ public class Main {
 			// Cross validation to find the threshold
 			cv = new CrossValidation((Map<String, TDTDocument>) documentImporter.getData(), keys, ep);
 			double avgCost = cv.compute();
-			System.out.println("Parameters:");
-			System.out.println(ep.toString());
-			System.out.println("Average cost: " + avgCost);
+			
+			// print cost in CSV file
+			try {
+				FileWriter filewriter = new FileWriter("resultsChart.csv", true);
+				filewriter.append(";"+Double.toString(avgCost));
+				filewriter.close();
+			} catch (Exception e){}
 		}
-
-		// Export the results in a csv file
-		// TODO
+		
 	}
 }

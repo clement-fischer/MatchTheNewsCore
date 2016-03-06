@@ -9,8 +9,7 @@ public class EvaluationParameters {
 	private double b;
 	private double k;
 	
-	public EvaluationParameters(int n, String tf, String idf, String norm, double b, double k){
-		this.n=n;
+	public EvaluationParameters(String tf, String idf, String norm, double b, double k){
 		this.tf=tf;
 		this.idf=idf;
 		this.norm=norm;
@@ -18,8 +17,20 @@ public class EvaluationParameters {
 		this.k=k;
 	}
 	
+	public EvaluationParameters(String tf, String idf, String norm){
+		this.tf=tf;
+		this.idf=idf;
+		this.norm=norm;
+		this.b=0;
+		this.k=0;
+	}
+	
 	public int getN(){
 		return n;
+	}
+	
+	public void setN(int n){
+		this.n = n;
 	}
 	
 	public String getTF(){
@@ -44,6 +55,9 @@ public class EvaluationParameters {
 	
 	// TODO
 	public String toString(){
-		return tf + idf + norm + " (" + n + ")";
+		String res = tf + idf + norm;
+		if (tf=="k")
+			res += "-b=" + b;
+		return res;
 	}
 }
