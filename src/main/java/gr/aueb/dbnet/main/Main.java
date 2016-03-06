@@ -52,13 +52,13 @@ public class Main {
 				currentDoc.setIsFirstStory(true);
 				readTopics.add(currentDoc.getLabel());
 			}
-
 		}
+		
 		// TODO Ask why this is not 250 as it is said in the dataset documentation
 		System.out.println("Number of topics in the dataset: " + readTopics.size());
 
-		LinkedList<EvaluationParameters> listTests = new LinkedList<EvaluationParameters>();
 		// Each set of parameters starts the a test.
+		LinkedList<EvaluationParameters> listTests = new LinkedList<EvaluationParameters>();
 		listTests.add(new EvaluationParameters("b", "s", "d"));
 		listTests.add(new EvaluationParameters("b", "b", "d"));
 		listTests.add(new EvaluationParameters("n", "s", "d"));
@@ -119,12 +119,14 @@ public class Main {
 			System.out.println("Done one model");
 		}
 		
+		EvaluationParameters ep = new EvaluationParameters("z", "z", "z");
+		
 		try {
 			FileWriter filewriter = new FileWriter("resultsChart.csv", true);
 			filewriter.append("\n"+ep.toString());
 			filewriter.close();
 		} catch (Exception e){}
-					
+				
 		for (int i = 0;i<5;i++) {
 			ep.setN(40*i + 20);
 			ns = new NoveltyScorer(ep);
