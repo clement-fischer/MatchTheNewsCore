@@ -84,7 +84,6 @@ public class TopicsImporter {
 				t.setSeed_Story(exceptionStory);
 			}
 			
-			
 			topics.put(block_id,t);	
 		}
 		System.out.println("Done importing Topics");

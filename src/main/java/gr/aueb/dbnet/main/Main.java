@@ -48,13 +48,13 @@ public class Main {
 				currentDoc.setIsFirstStory(true);
 				readTopics.add(currentDoc.getLabel());
 			}
-
 		}
+		
 		// TODO Ask why this is not 250 as it is said in the dataset documentation
 		System.out.println("Number of topics in the dataset: " + readTopics.size());
 
-		LinkedList<EvaluationParameters> listTests = new LinkedList<EvaluationParameters>();
 		// Each set of parameters starts the a test.
+		LinkedList<EvaluationParameters> listTests = new LinkedList<EvaluationParameters>();
 		listTests.add(new EvaluationParameters(60, "b", "s", "d", 0, 1));
 		listTests.add(new EvaluationParameters(60, "n", "s", "d", 0, 1));
 		listTests.add(new EvaluationParameters(60, "k", "b", "d", 0, 1));
@@ -85,6 +85,10 @@ public class Main {
 			System.out.println(ep.toString());
 			System.out.println("Average cost: " + avgCost);
 		}
+		
+		// Baseline method
+		
+		
 
 		// Export the results in a csv file
 		// TODO
