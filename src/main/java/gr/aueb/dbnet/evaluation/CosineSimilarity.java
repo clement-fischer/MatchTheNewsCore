@@ -10,11 +10,12 @@ import gr.aueb.dbnet.tdt.structures.TDTDocument;
 public class CosineSimilarity {
 	LinkedList<TDTDocument> slidingWindow;
 	int windowSize;
-	EvaluationParameters ep = new EvaluationParameters(60, "b", "s", "d", 0, 1);
+	EvaluationParameters ep = new EvaluationParameters("b", "s", "d", 0, 1);
 
 	// Constructor
-	public CosineSimilarity() {
+	public CosineSimilarity(EvaluationParameters ep) {
 		slidingWindow = new LinkedList<TDTDocument>();
+		windowSize=ep.getN();
 	}
 
 	public void nextDocument(TDTDocument doc) throws ParseException {

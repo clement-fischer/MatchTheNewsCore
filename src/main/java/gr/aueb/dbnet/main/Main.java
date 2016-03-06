@@ -1,15 +1,14 @@
 package gr.aueb.dbnet.main;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeSet;
 
+import gr.aueb.dbnet.evaluation.CosineSimilarity;
 import gr.aueb.dbnet.evaluation.CrossValidation;
 import gr.aueb.dbnet.evaluation.EvaluationParameters;
 import gr.aueb.dbnet.importers.tdt.DocumentImporter;
@@ -120,20 +119,21 @@ public class Main {
 		}
 		
 		EvaluationParameters ep = new EvaluationParameters("z", "z", "z");
+		CosineSimilarity cs;
 		
 		try {
 			FileWriter filewriter = new FileWriter("resultsChart.csv", true);
-			filewriter.append("\n"+ep.toString());
+			filewriter.append("\n"+"MeanCS");
 			filewriter.close();
 		} catch (Exception e){}
 				
 		for (int i = 0;i<5;i++) {
 			ep.setN(40*i + 20);
-			ns = new NoveltyScorer(ep);
+			cs = new CosineSimilarity(ep);
 			for (String key : keys) {
 				currentDoc = (TDTDocument) documentImporter.getData().get(key);
 				try {
-					ns.nextDocument(currentDoc);
+					cs.nextDocument(currentDoc);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
