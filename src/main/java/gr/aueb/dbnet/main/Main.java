@@ -58,14 +58,14 @@ public class Main {
 
 		// Each set of parameters starts the a test.
 		LinkedList<EvaluationParameters> listTests = new LinkedList<EvaluationParameters>();
-		listTests.add(new EvaluationParameters("b", "s", "d"));
-		listTests.add(new EvaluationParameters("b", "b", "d"));
-		listTests.add(new EvaluationParameters("n", "s", "d"));
-		listTests.add(new EvaluationParameters("n", "b", "d"));
-		listTests.add(new EvaluationParameters("l", "s", "d"));
-		listTests.add(new EvaluationParameters("l", "b", "d"));
-		listTests.add(new EvaluationParameters("k", "s", "d",0,1));
-		listTests.add(new EvaluationParameters("k", "b", "d",0,1));
+//		listTests.add(new EvaluationParameters("b", "s", "d"));
+//		listTests.add(new EvaluationParameters("b", "b", "d"));
+//		listTests.add(new EvaluationParameters("n", "s", "d"));
+//		listTests.add(new EvaluationParameters("n", "b", "d"));
+//		listTests.add(new EvaluationParameters("l", "s", "d"));
+//		listTests.add(new EvaluationParameters("l", "b", "d"));
+//		listTests.add(new EvaluationParameters("k", "s", "d",0,1));
+//		listTests.add(new EvaluationParameters("k", "b", "d",0,1));
 
 		// Add one by one the documents to be processed, give a NS to each document
 		NoveltyScorer ns;

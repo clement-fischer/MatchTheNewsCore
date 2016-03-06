@@ -9,7 +9,7 @@ import gr.aueb.dbnet.tdt.structures.TDTDocument;
 
 public class CrossValidation {
 	private int nbFolds = 5;
-	private int nbThresholds = 10;
+	private int nbThresholds = 50;
 	private List<String> keysForCrossValidation;
 	private Map<String, TDTDocument> tdt_documents;
 

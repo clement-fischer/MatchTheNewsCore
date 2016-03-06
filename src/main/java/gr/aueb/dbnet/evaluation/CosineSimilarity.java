@@ -33,13 +33,13 @@ public class CosineSimilarity {
 		Integer w1, w2;
 		Map<String, Integer> terms1 = doc1.getAnalyzedText();
 		Map<String, Integer> terms2;
-		TreeSet<String> termsSet1 = (TreeSet<String>) terms1.keySet(), termsSet2;
+		TreeSet<String> termsSet1 =  new TreeSet<String>(terms1.keySet()), termsSet2;
 		for (TDTDocument doc2 : slidingWindow) {
 			sum = 0;
 			sum1 = 0;
 			sum2 = 0;
 			terms2 = doc2.getAnalyzedText();
-			termsSet2 = (TreeSet<String>) terms2.keySet();
+			termsSet2 = new TreeSet<String>(terms2.keySet());
 			termsSet2.retainAll(termsSet1);
 			for (String term : termsSet2) {
 				w1 = terms1.get(term);
@@ -48,7 +48,8 @@ public class CosineSimilarity {
 				sum1 += w1 * w1;
 				sum2 += w2 * w2;
 			}
-			ns += sum / Math.sqrt(sum1 * sum2);
+			if (sum != 0)
+				ns += sum / Math.sqrt(sum1 * sum2);
 		}
 		ns/=windowSize;
 		doc1.setNoveltyScore(ns);
