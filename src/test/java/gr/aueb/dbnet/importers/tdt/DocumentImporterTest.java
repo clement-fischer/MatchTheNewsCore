@@ -42,7 +42,7 @@ public class DocumentImporterTest {
 	@Test
 	public void importData() throws IOException {
 		Importer documentImporter=new DocumentImporter();
-		documentImporter.importData();
+		documentImporter.importData(false);
 		int size = documentImporter.getData().size();
 		System.out.print("test loaded:"+ size+" documents");
 	}

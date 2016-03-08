@@ -7,7 +7,7 @@ import java.util.Map;
 
 public abstract class Importer {
 	
-	public void importData() throws IOException {
+	public void importData(boolean asGraphOfWords) throws IOException {
 	}
 	
 	public abstract Map<String, ? extends Document> getTrainDocuments() ;

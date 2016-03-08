@@ -27,8 +27,10 @@ public class GoogleNewsImporter extends Importer {
 	private ConcurrentHashMap<String, Document> trainDocuments;
 	private ConcurrentHashMap<String, Document> testDocuments;
 	
+	// TODO
+	// asGraphOfWords not implemented in this class
 	@Override
-	public void importData() throws IOException{
+	public void importData(boolean asGraphOfWords) throws IOException{
 		
 		documents_google = new ConcurrentHashMap<String, Document>();
 		String data_path = System.getProperty("user.home")+SystemProperties.DOCUMENT_FOLDER_IMPORT_GOOGLE_NEWS;
